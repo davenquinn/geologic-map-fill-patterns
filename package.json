@@ -1,0 +1,18 @@
+{
+  "name": "geologic-map-fill-patterns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "commands": [
+    "command.coffee"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "css": "^2.2.1",
+    "jsdom": "^11.6.1",
+    "svg.js": "^2.6.3",
+    "svgdom": "0.0.15"
+  }
+}
