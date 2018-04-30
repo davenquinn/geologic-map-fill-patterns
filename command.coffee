@@ -57,6 +57,12 @@ handler = ->
         d3.select @
           .style 'fill', symbol_color
 
+      if symbol_rotation?
+        [x, y, w, h] = svg.attr('viewBox').split(' ').map (d)->parseFloat(d)
+        cx = x+w/2
+        cy = y+h/2
+        svg.select('g').attr 'transform', "rotate(#{symbol_rotation} #{cx} #{cy})"
+
       svg.insert 'rect', ':first-child'
         .attr 'width', 1000
         .attr 'height', 1000
