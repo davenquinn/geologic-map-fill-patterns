@@ -17,7 +17,7 @@ handler = ->
 
   assets = await db.query sql(join(__dirname,'sql/get-assets.sql'))
 
-  for {id, fgdc_symbol, color, symbol_color} in assets
+  for {id, fgdc_symbol, color, symbol_color, symbol_rotation} in assets
     sym = findSymbol(fgdc_symbol+'.svg')
     dom = new JSDOM readFileSync sym, 'utf-8'
     v = d3.select(dom.window.document.documentElement)
@@ -25,7 +25,6 @@ handler = ->
 
     color ?= 'transparent'
 
-    console.log symbol_color
     if symbol_color?
       svg.selectAll("*").each (d)->
         el = d3.select @
@@ -53,7 +52,6 @@ handler = ->
         ## Check if filled ##
         if (obj.stroke? and obj.stroke != 'none')
           el.style 'stroke', symbol_color
-
 
       svg.selectAll("g").each (d)->
         d3.select @
