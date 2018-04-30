@@ -23,10 +23,20 @@ handler = ->
     v = d3.select(dom.window.document.documentElement)
     svg = v.select("svg")
 
+    color ?= 'transparent'
+
+    console.log symbol_color
     if symbol_color?
       svg.selectAll("*").each (d)->
         el = d3.select @
         style = el.attr('style')
+
+        for i in ['fill','stroke']
+          fill = el.attr(i)
+          if fill?
+            el.attr i, symbol_color
+
+        # Parse the style object
         return unless style?
         obj = {}
         for kv in style.split(";")
