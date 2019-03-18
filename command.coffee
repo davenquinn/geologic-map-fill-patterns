@@ -17,16 +17,25 @@ handler = ->
 
   assets = await db.query sql(join(__dirname,'sql/get-assets.sql'))
 
-  for {id, fgdc_symbol, color, symbol_color} in assets
+  for {id, fgdc_symbol, color, symbol_color, symbol_rotation} in assets
     sym = findSymbol(fgdc_symbol+'.svg')
     dom = new JSDOM readFileSync sym, 'utf-8'
     v = d3.select(dom.window.document.documentElement)
     svg = v.select("svg")
 
+    color ?= 'transparent'
+
     if symbol_color?
       svg.selectAll("*").each (d)->
         el = d3.select @
         style = el.attr('style')
+
+        for i in ['fill','stroke']
+          fill = el.attr(i)
+          if fill?
+            el.attr i, symbol_color
+
+        # Parse the style object
         return unless style?
         obj = {}
         for kv in style.split(";")
@@ -44,10 +53,15 @@ handler = ->
         if (obj.stroke? and obj.stroke != 'none')
           el.style 'stroke', symbol_color
 
-
       svg.selectAll("g").each (d)->
         d3.select @
           .style 'fill', symbol_color
+
+      if symbol_rotation?
+        [x, y, w, h] = svg.attr('viewBox').split(' ').map (d)->parseFloat(d)
+        cx = x+w/2
+        cy = y+h/2
+        svg.select('g').attr 'transform', "rotate(#{symbol_rotation} #{cx} #{cy})"
 
       svg.insert 'rect', ':first-child'
         .attr 'width', 1000
